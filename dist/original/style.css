@@ -29,56 +29,18 @@ a {
 
 
 #footer {
+  margin-top: 70px;
   padding-bottom: 10px;
   font-size: 0.8em;
-  position: absolute;
-  bottom: 15px;
 }
 
 .hidden {
   display: none;
 }
 
-/* ------- words ------- */
-
 .word {
   display: inline-block;
   position: relative;
-}
-
-.word.poop {
-  color: blue;
-  font-weight: bold;
-}
-
-.word.poop::before {
-  content: "";
-  display: inline-block;
-  position: absolute;
-  background-image: url('img/poop.gif');
-  background-size: 30px 28px;
-  width: 30px;
-  height: 30px;
-  transform: translateX(-50%) translateY(-65%);
-}
-
-.word.hovered {
-  animation-duration: 400ms;
-  animation-name: fall;
-  animation-fill-mode: forwards;
-  animation-timing-function: ease-in;
-}
-
-@keyframes fall {
-  from {
-    opacity: 1;
-    top: 0px;
-  }
-
-  to {
-    opacity: 0;
-    top: 100px;
-  }
 }
 
 /* ------- loader ------- */

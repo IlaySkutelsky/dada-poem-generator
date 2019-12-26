@@ -12,15 +12,15 @@ async function scrapMivzak() {
       const $ = cheerio.load(response.data)
       let firstMivzak = $(firstMivzakSelector)
       let firstMivzakURL = "https://www.ynet.co.il/" + $(firstMivzak[0]).attr('href')
-      console.log("axios firstMivzakURL:");
-      console.log(firstMivzakURL);
+      // console.log("axios firstMivzakURL:");
+      // console.log(firstMivzakURL);
       return axios.get(firstMivzakURL).then((response) => {
         const $ = cheerio.load(response.data)
         let mivzakHeaderText = $(mivzakHeaderSelector).contents().first().text();
         let mivzakBodyText = $(mivzakBodySelector).contents().first().text();
         let mivzakString = mivzakHeaderText + ' ' + mivzakBodyText
-        console.log("axios mivzakString:");
-        console.log(mivzakString);
+        // console.log("axios mivzakString:");
+        // console.log(mivzakString);
         return {
           text: mivzakString,
           url: firstMivzakURL
