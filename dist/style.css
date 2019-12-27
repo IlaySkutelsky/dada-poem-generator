@@ -10,7 +10,8 @@ html, body {
 }
 
 body {
-  height: 100vh;
+  min-height: 100vh;
+  height: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -29,10 +30,10 @@ a {
 
 
 #footer {
-  padding-bottom: 10px;
   font-size: 0.8em;
-  position: absolute;
-  bottom: 15px;
+  margin-top: auto;
+  padding-top: 60px;
+  padding-bottom: 10px;
 }
 
 .hidden {
@@ -44,6 +45,10 @@ a {
 .word {
   display: inline-block;
   position: relative;
+}
+
+.word.number {
+  min-width: 3.4em;
 }
 
 .word.poop {
