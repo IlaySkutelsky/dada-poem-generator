@@ -21,7 +21,7 @@ function renderWords(words, url) {
     if (word.search(/\d/) !== -1) {
       console.log('word: ' + word + ' has a number');
     }
-    poemString += `<span class="word word${i}${classesStr}" onmouseover="hoveredWord(this)">${word+' '}</span>`
+    poemString += `<span class="word word${i}${classesStr} hidden-word" onmouseover="hoveredWord(this)">${word+' '}</span>`
     if (Math.random() > 0.725) {
       poemString += '\n'
     }
@@ -36,6 +36,9 @@ function renderWords(words, url) {
   linkElm.href = url
   let footerElm = document.getElementById('footer')
   footerElm.className = ''
+  setTimeout(function () {
+    appearifyWords()
+  }, 100);
   return Promise.resolve();
 }
 
@@ -82,38 +85,21 @@ function createRandomStyle() {
   document.body.appendChild(sheet);
 }
 
-// function resetStyle() {
-//   console.log('called reset styele');
-//   let sheet = document.getElementById('random-style')
-//   if (sheet) {
-//       sheet.innerHTML = ''
-//   } else {
-//     sheet = document.createElement('style')
-//     sheet.setAttribute('id', 'random-style')
-//   }
-//   let cssString = ` .word {
-//       transform: scale(1);
-//       opacity: 1 !important;
-//       top: 0 !important;
-//   }
-//
-//   `
-//   sheet.innerHTML = cssString;
-//   document.body.appendChild(sheet);
-//
-//   setTimeout(function () {
-//     createRandomStyle()
-//   }, 100);
-// }
+function appearifyWords() {
+    let wordElms = document.getElementsByClassName("word")
+    for (let i=0; i< wordElms.length ; i++) {
+      setTimeout(function (elm) {
+        elm.classList.remove("hidden-word");
+      }, 60 * i, wordElms[i]);
+    }
+}
 
 function hoveredWord(wordElm) {
   if (wordElm.className.includes('hovered')) return
   wordElm.className += ' hovered';
   hoveredWords++
   if (hoveredWords === words.length) {
-    // setTimeout(function () {
-    //   resetStyle()
-    // }, 300);
+    // reset or something
   } else {
     setTimeout(function () {
       createRandomStyle()
