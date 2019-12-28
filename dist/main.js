@@ -32,10 +32,13 @@ function renderWords(words, url) {
   let poemElm = document.getElementById('poem')
   poemElm.innerHTML = poemString
 
-  let linkElm = document.getElementById('link')
-  linkElm.href = url
-  let footerElm = document.getElementById('footer')
-  footerElm.className = ''
+  if (url) {
+    let linkElm = document.getElementById('link')
+    linkElm.href = url
+    let footerElm = document.getElementById('footer')
+    footerElm.className = ''
+  }
+
   setTimeout(function () {
     appearifyWords()
   }, 100);
@@ -111,13 +114,11 @@ function hoveredWord(wordElm) {
   wordElm.classList.add('hovered');
   newWords.push(words[wordElm.dataset.index])
   if (newWords.length === words.length) {
-    // reset or something
-
     words = newWords
     newWords = []
     setTimeout(function () {
       renderWords(words)
-    }, 200);
+    }, 1000);
   } else {
     setTimeout(function () {
       randomizeWordAttribute()
@@ -131,7 +132,8 @@ function recursiveAnimateNumbers() {
   for (var i = 0; i < numberElms.length; i++) {
     setTimeout(function (elm) {
       let digits = elm.innerText.match(/\d+/)[0].length
-      elm.innerText = elm.innerText.replace(/\d+/, Math.floor(Math.random()*Math.pow(10, digits)+(10^(digits-1))))
+      elm.innerText = elm.innerText.replace(/\d+/,
+        Math.floor(Math.random()*(Math.pow(10, digits)-(10^(digits-1)))+(10^(digits-1))))
     }, Math.floor(Math.random()*900+100), numberElms[i]);
   }
   setTimeout(function () {
@@ -146,7 +148,7 @@ async function run() {
   randomizeWordAttribute()
   shuffleArray(words)
   console.log(words);
-  renderWords(words)
+  renderWords(words, result.url)
   createRandomStyle()
   recursiveAnimateNumbers()
 }
