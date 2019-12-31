@@ -65,6 +65,8 @@ function randomizeWordAttribute() {
     word.translateX = twoDigits(Math.random()*50 - 25)
     word.translateY = twoDigits(Math.random()*20 - 10)
     word.transition = twoDigits(Math.random() * 1100 + 100)
+    word.hue = Math.floor(Math.random()*360)
+    word.lum = Math.floor(Math.random()*24)
   }
 }
 
@@ -86,16 +88,54 @@ function createRandomStyle() {
     sheet.setAttribute('id', 'random-style')
   }
   let cssString = ''
-  for (var i=0; i < words.length; i++) {
-    cssString += `.word[data-index='${i}'] {
-      transform: scale(${ words[i].scale })
-                 rotateZ(${ words[i].rotateZ }deg)
-                 translateX(${ words[i].translateX }px)
-                 translateY(${ words[i].translateY }px) !important;
-      transition: ${ words[i].transition }ms;
-    }
-    `
+
+  let styleId = 0 ;
+
+  switch (styleId) {
+    case 0:
+      for (var i=0; i < words.length; i++) {
+        cssString += `.word[data-index='${i}'] {
+          color: hsl(${ words[i].hue}, 100%, ${words[i].lum}%);
+          transform: scale(${ words[i].scale })
+                     rotateZ(${ words[i].rotateZ }deg)
+                     translateX(${ words[i].translateX }px)
+                     translateY(${ words[i].translateY }px) !important;
+          transition: ${ words[i].transition }ms;
+        }
+        `
+      }
+    break;
+    case 1:
+      for (var i=0; i < words.length; i++) {
+        cssString += `
+          .word[data-index='${i}'] {
+            animation-timing-function: steps(3, jump-both);
+            animation-duration: 2s;
+            animation-iteration-count:infinite;
+            animation-name: glitch${i};
+          }
+
+          @keyframes glitch${i} {
+            0% {
+              transform: translateX(0px)
+            }
+
+            50% {
+              transform: translateX(${ words[i].translateX }px)
+                         translateY(${ words[i].translateY }px)
+            }
+
+            100% {
+              transform: translateX(0px)
+            }
+          }
+        `
+      }
+    break;
   }
+
+
+
   sheet.innerHTML = cssString;
   document.body.appendChild(sheet);
 }
@@ -156,5 +196,6 @@ async function run() {
 function twoDigits(num) {
   return Math.round(num * 100) / 100
 }
+
 
 run()
