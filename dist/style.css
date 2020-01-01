@@ -52,7 +52,7 @@ a {
 }
 
 .word.poop {
-  color: blue;
+  color: blue !important;
   font-weight: bold;
 }
 
