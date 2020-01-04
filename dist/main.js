@@ -174,7 +174,7 @@ function recursiveAnimateNumbers() {
       let digits = elm.innerText.match(/\d+/)[0].length
       elm.innerText = elm.innerText.replace(/\d+/,
         Math.floor(Math.random()*(Math.pow(10, digits)-(10^(digits-1)))+(10^(digits-1))))
-    }, Math.floor(Math.random()*900+100), numberElms[i]);
+    }, Math.floor(Math.random()*1200+100), numberElms[i]);
   }
   setTimeout(function () {
     recursiveAnimateNumbers()
