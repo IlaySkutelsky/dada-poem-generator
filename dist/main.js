@@ -118,50 +118,18 @@ function createRandomStyle() {
   }
   let cssString = ''
 
-  let styleId = 1 ;
-
-  switch (styleId) {
-    case 0:
-      for (var i=0; i < words.length; i++) {
-        cssString += `#poem.with-random-style .word[data-index='${i}'] {
-          color: hsl(${ words[i].hue}, 100%, ${words[i].lum}%);
-          transform: scale(${ words[i].scale })
-                     rotateZ(${ words[i].rotateZ }deg)
-                     translateX(${ words[i].translateX }px)
-                     translateY(${ words[i].translateY }px) !important;
-          transition: ${ words[i].transition }ms;
-        }
-        `
-      }
-    break;
-    case 1:
-      for (var i=0; i < words.length; i++) {
-        cssString += `
-        #poem.with-random-style .word[data-index='${i}'] {
-            animation-timing-function: steps(3, jump-both);
-            animation-duration: 2s;
-            animation-iteration-count:infinite;
-            animation-name: glitch${i};
-          }
-
-          @keyframes glitch${i} {
-            0% {
-              transform: translateX(0px)
-            }
-
-            50% {
-              transform: translateX(${ words[i].translateX }px)
-                         translateY(${ words[i].translateY }px)
-            }
-
-            100% {
-              transform: translateX(0px)
-            }
-          }
-        `
-      }
-    break;
+  for (var i=0; i < words.length; i++) {
+    cssString += `#poem.with-random-style .word[data-index='${i}'] {
+      color: hsl(${ words[i].hue}, 100%, ${words[i].lum}%);
+      transform: scale(${ words[i].scale })
+                  rotateZ(${ words[i].rotateZ }deg)
+                  translateX(${ words[i].translateX }px)
+                  translateY(${ words[i].translateY }px) !important;
+      transition: ${ words[i].transition }ms;
+    }
+    `
   }
+  
   sheet.innerHTML = cssString;
   document.body.appendChild(sheet);
 }
