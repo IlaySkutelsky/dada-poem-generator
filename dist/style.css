@@ -39,10 +39,7 @@ p#poem {
   white-space: break-spaces;
 }
 
-a {
-  color: #777;
-}
-
+/* --------- Footer --------- */
 
 #footer {
   text-align: center;
@@ -50,29 +47,62 @@ a {
   margin-top: auto;
   padding-top: 60px;
   padding-bottom: 10px;
+  width: 100%;
+  position: relative;
+}
+a {
+  color: #777;
 }
 
-.hidden {
-  display: none;
+button.settings {
+  position: absolute;
+  bottom: 0.5em;
+  right: 0.5em;
+  font-size: 1.6em;
+  background-color: white;
+  border: 2px solid black;
+  height: 1.7em;
+  width: 1.7em;
+  cursor: pointer;
 }
 
-/* ------- words ------- */
+.settings-menu {
+  position: absolute;
+  top: -0.5em;
+  right: 2.5em;
+  width: max-content;
+  font-size: 1rem;
+  background: white;
+  padding: 1em;
+  border: 2px solid black;
+  display: flex;
+  align-items: center;
+}
+
+.settings-menu input {
+  width: 1.5em;
+  height: 1.5em;
+  margin: 0 0 0 1em;
+}
+
+/* ------- Poem ------- */
 
 .word {
   display: inline-block;
   position: relative;
+  transition: all 400ms;
 }
 
 .word.number {
-  min-width: 2.5em;
+  position: relative;
 }
 
-.word.poop {
+#poem.with-random-style .word.poop {
   color: blue !important;
   font-weight: bold;
 }
 
-.word.poop::before {
+#poem.with-random-style .word.poop::before {
   content: "";
   display: inline-block;
   position: absolute;
@@ -84,6 +114,7 @@ a {
 }
 
 .hidden-word {
+  pointer-events: none;
   opacity: 0;
 }
 
@@ -104,6 +135,12 @@ a {
     opacity: 0;
     top: 100px;
   }
+}
+
+/* ------- Utility ------- */
+
+.hidden {
+  display: none;
 }
 
 /* ------- loader ------- */

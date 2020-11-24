@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="/style.css">
     <script type="text/javascript" src="main.js"></script>
   </head>
-  <body>
+  <body onload="handleBodyLoaded()">
     <h1>שיר דאדא אקטואלי אוטומאטי</h1>
     <p id="poem">
     </p>
@@ -20,12 +20,17 @@
       <div class="sk-chase-dot"></div>
     </div>
 
-    <span id="footer" class="hidden">
+    <div id="footer" class="hidden">
+      <button class="settings" onclick="toggleSettingsMenu(event)">⚙</button>
+      <div class="settings-menu hidden">
+        <input type="checkbox" onclick="changedRandomStyle(event)">
+        עיצוב רנדומלי
+      </div>
       השיר נוצר באקראי מתוך
       <a id="link" target="_blank" href="">
-        המבזק העדכני ביותר באתר ynet,
-      </a>
+        המבזק העדכני ביותר באתר ynet
+      </a>,
        בהשראת שירת הדאדא.
-    </span>
+    </div>
   </body>
 </html>

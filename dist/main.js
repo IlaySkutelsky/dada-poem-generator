@@ -1,50 +1,46 @@
 let words
 let newWords = []
+let currMivzakURL
+let bodyLoaded = false
+
+async function run() {
+  let result = await getMivzakim()
+  currMivzakURL = result.url
+  words = await formatWords(result.text)
+  randomizeWordAttribute()
+  shuffleArray(words)
+  console.log(words);
+  await waitForBodyToLoad()
+  checkIfRandomStyleIsOn()
+  renderWords(words, result.url)
+  createRandomStyle()
+  recursiveAnimateNumbers()
+}
+
+function handleBodyLoaded() {bodyLoaded=true}
+
+function waitForBodyToLoad() {
+  return new Promise((resolve, reject)=>{
+    function checkIfBodyLoaded() {
+      if (bodyLoaded) resolve()
+      else {
+        setTimeout(checkIfBodyLoaded, 150)
+      }
+    }
+    checkIfBodyLoaded()
+  })
+}
+
 
 async function getMivzakim() {
   let response = await fetch('/mivzak');
   let mivzak = await response.json()
   console.log(mivzak);
-  let words = mivzak.text.split(" ")
-  return { words:words, url:mivzak.url }
+  return { text:mivzak.text, url:mivzak.url }
 }
 
-function renderWords(words, url) {
-  let poemString = ''
-  for (let i=0; i<words.length; i++) {
-    let word=words[i].text
-
-    let classesStr = ''
-    if (['ממשלה','ישראל','כנסת'].some(function(v) { return word.indexOf(v) >= 0; })) {
-      classesStr = 'poop'
-    }
-    if (word.search(/\d/) !== -1) {
-      classesStr = 'number'
-    }
-    poemString += `<span class="word ${classesStr} hidden-word" data-index="${i}" onmouseover="hoveredWord(this)">${word+' '}</span>`
-    if (Math.random() > 0.725) {
-      poemString += '\n'
-    }
-  }
-
-  let loaderElm = document.getElementById('loader')
-  loaderElm.className += ' hidden'
-  let poemElm = document.getElementById('poem')
-  poemElm.innerHTML = poemString
-
-  if (url) {
-    let linkElm = document.getElementById('link')
-    linkElm.href = url
-    let footerElm = document.getElementById('footer')
-    footerElm.className = ''
-  }
-
-  setTimeout(function () {
-    appearifyWords()
-  }, 100);
-}
-
-function formatWords(words) {
+function formatWords(mivzakText) {
+  let words = mivzakText.split(" ")
   let wordObjs = []
   for (var i = words.length - 1; i > 0; i--) {
     let idx = words[i].search(/[A-Z, a-z, א-ת, 0-9]/)
@@ -70,13 +66,46 @@ function randomizeWordAttribute() {
   }
 }
 
-function shuffleArray(array) {
-  for (var i = array.length - 1; i > 0; i--) {
-    var j = Math.floor(Math.random() * (i + 1));
-    var temp = array[i];
-    array[i] = array[j];
-    array[j] = temp;
+function renderWords(words, url) {
+  let poemString = ''
+  for (let i=0; i<words.length; i++) {
+    let word=words[i].text
+    let styleStr = ''
+
+    let classesStr = ''
+    if (['ממשלה','ישראל','כנסת'].some(function(v) { return word.indexOf(v) >= 0; })) {
+      classesStr = 'poop'
+    }
+    if (word.search(/\d/) !== -1) {
+      let amountOfDigits = word.match(/\d/g).length
+      classesStr = 'number'
+      let minWidth = Math.pow(word.length-amountOfDigits, 0.5) + Math.pow(amountOfDigits, 0.75) + word.length*0.1
+      styleStr = `style="min-width: ${twoDigits(minWidth)}em"`
+    }
+    poemString += `<span class="word ${classesStr} hidden-word" 
+                         data-index="${i}" 
+                         ${styleStr}
+                         onmouseover="hoveredWord(this)">${word+' '}</span>`
+    if (Math.random() > 0.725) {
+      poemString += '\n'
+    }
   }
+
+  let loaderElm = document.getElementById('loader')
+  loaderElm.classList.add('hidden')
+  let poemElm = document.getElementById('poem')
+  poemElm.innerHTML = poemString
+
+  if (url) {
+    let linkElm = document.getElementById('link')
+    linkElm.href = url
+    let footerElm = document.getElementById('footer')
+    footerElm.classList.remove('hidden')
+  }
+
+  setTimeout(function () {
+    appearifyWords()
+  }, 100);
 }
 
 function createRandomStyle() {
@@ -89,12 +118,12 @@ function createRandomStyle() {
   }
   let cssString = ''
 
-  let styleId = 0 ;
+  let styleId = 1 ;
 
   switch (styleId) {
     case 0:
       for (var i=0; i < words.length; i++) {
-        cssString += `.word[data-index='${i}'] {
+        cssString += `#poem.with-random-style .word[data-index='${i}'] {
           color: hsl(${ words[i].hue}, 100%, ${words[i].lum}%);
           transform: scale(${ words[i].scale })
                      rotateZ(${ words[i].rotateZ }deg)
@@ -108,7 +137,7 @@ function createRandomStyle() {
     case 1:
       for (var i=0; i < words.length; i++) {
         cssString += `
-          .word[data-index='${i}'] {
+        #poem.with-random-style .word[data-index='${i}'] {
             animation-timing-function: steps(3, jump-both);
             animation-duration: 2s;
             animation-iteration-count:infinite;
@@ -133,9 +162,6 @@ function createRandomStyle() {
       }
     break;
   }
-
-
-
   sheet.innerHTML = cssString;
   document.body.appendChild(sheet);
 }
@@ -145,15 +171,41 @@ function appearifyWords() {
     for (let i=0; i< wordElms.length ; i++) {
       setTimeout(function (elm) {
         elm.classList.remove("hidden-word");
-      }, (Math.random()*20 + 40) * i, wordElms[i]);
+      }, (Math.random()*20 + 50) * i, wordElms[i]);
     }
 }
 
-function hoveredWord(wordElm) {
+function recursiveAnimateNumbers() {
+  let numberElms = document.getElementsByClassName("number");
+  for (var i = 0; i < numberElms.length; i++) {
+    setTimeout(function (elm) {
+      let digitsList = elm.innerText.match(/\d+/g)
+      let digits = elm.innerText.match(/\d+/g)[0].length
+      elm.innerText = elm.innerText.replaceAll(/\d+/g, (number) => {
+        let len = number.toString().length
+        return Math.floor(Math.pow(10, len-1) + Math.random()*9*Math.pow(10, len-1))
+      })
+    }, Math.floor(Math.random()*1200+100), numberElms[i]);
+  }
+  setTimeout(function () {
+    recursiveAnimateNumbers()
+  }, 150);
+}
+
+// ----------- User Interactions ----------- 
+
+async function hoveredWord(wordElm) {
   if (wordElm.classList.contains('hovered')) return
   wordElm.classList.add('hovered');
   newWords.push(words[wordElm.dataset.index])
   if (newWords.length === words.length) {
+    if (Math.random()>0.5) {
+      let result = await getMivzakim()
+      if (result.url != currMivzakURL) {
+        run()
+        return
+      }
+    }
     words = newWords
     newWords = []
     setTimeout(function () {
@@ -167,30 +219,39 @@ function hoveredWord(wordElm) {
   }
 }
 
-function recursiveAnimateNumbers() {
-  let numberElms = document.getElementsByClassName("number");
-  for (var i = 0; i < numberElms.length; i++) {
-    setTimeout(function (elm) {
-      let digits = elm.innerText.match(/\d+/)[0].length
-      elm.innerText = elm.innerText.replace(/\d+/,
-        Math.floor(Math.random()*(Math.pow(10, digits)-(10^(digits-1)))+(10^(digits-1))))
-    }, Math.floor(Math.random()*1200+100), numberElms[i]);
+function toggleSettingsMenu(e) {
+  e.stopPropagation()
+  let menuElm = document.querySelector(".settings-menu")
+  let menuIsHidden = menuElm.classList.toggle("hidden")
+  document.body.onclick = ()=>{
+    let menuElm = document.querySelector(".settings-menu")
+    menuElm.classList.add("hidden")
+    document.body.onclick = null;
   }
-  setTimeout(function () {
-    recursiveAnimateNumbers()
-  }, 150);
 }
 
-async function run() {
-  let result = await getMivzakim()
-  words = await formatWords(result.words)
-  // await cleanArray(words)
-  randomizeWordAttribute()
-  shuffleArray(words)
-  console.log(words);
-  renderWords(words, result.url)
-  createRandomStyle()
-  recursiveAnimateNumbers()
+function changedRandomStyle(e) {
+  let randomStyleCheckbox = document.querySelector(".settings-menu input")
+  let isChecked = randomStyleCheckbox.checked
+  let poemElm = document.querySelector('#poem')
+  poemElm.classList.toggle('with-random-style', isChecked)
+  if (e) e.stopPropagation()
+}
+
+function checkIfRandomStyleIsOn() {
+  let randomStyleCheckbox = document.querySelector(".settings-menu input")
+  if (randomStyleCheckbox.checked) changedRandomStyle()
+}
+
+// ----------- Utilities ----------- 
+
+function shuffleArray(array) {
+  for (var i = array.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
+  }
 }
 
 function twoDigits(num) {
