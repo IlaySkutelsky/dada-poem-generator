@@ -3,8 +3,8 @@ let newWords = []
 let currMivzakURL
 let bodyLoaded = false
 
-async function run() {
-  let result = await getMivzakim()
+async function run(result) {
+  if (!result) result = await getMivzakim()
   currMivzakURL = result.url
   words = await formatWords(result.text)
   randomizeWordAttribute()
@@ -170,15 +170,15 @@ async function hoveredWord(wordElm) {
     if (Math.random()>0.5) {
       let result = await getMivzakim()
       if (result.url != currMivzakURL) {
-        run()
-        return
+        run(result)
       }
+    } else {
+      words = newWords
+      newWords = []
+      setTimeout(function () {
+        renderWords(words)
+      }, 1000);
     }
-    words = newWords
-    newWords = []
-    setTimeout(function () {
-      renderWords(words)
-    }, 1000);
   } else {
     setTimeout(function () {
       randomizeWordAttribute()
