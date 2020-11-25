@@ -167,14 +167,18 @@ async function hoveredWord(wordElm) {
   wordElm.classList.add('hovered');
   newWords.push(words[wordElm.dataset.index])
   if (newWords.length === words.length) {
+    words = newWords
+    newWords = []
     if (Math.random()>0.5) {
       let result = await getMivzakim()
       if (result.url != currMivzakURL) {
         run(result)
+      } else {
+        setTimeout(function () {
+          renderWords(words)
+        }, 1000);
       }
     } else {
-      words = newWords
-      newWords = []
       setTimeout(function () {
         renderWords(words)
       }, 1000);
