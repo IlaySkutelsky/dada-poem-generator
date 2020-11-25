@@ -82,7 +82,7 @@ button.settings {
 
 .settings-menu {
   position: absolute;
-  top: -0.5em;
+  top: -100%;
   right: 2.5em;
   width: max-content;
   font-size: 1rem;
