@@ -31,7 +31,6 @@ function waitForBodyToLoad() {
   })
 }
 
-
 async function getMivzakim() {
   let response = await fetch('/mivzak');
   let mivzak = await response.json()
