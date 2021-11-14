@@ -82,8 +82,8 @@ function renderWords(words, url) {
       let minWidth = Math.pow(word.length-amountOfDigits, 0.5) + Math.pow(amountOfDigits, 0.75) + word.length*0.1
       styleStr = `style="min-width: ${twoDigits(minWidth)}em"`
     }
-    poemString += `<span class="word ${classesStr} hidden-word" 
-                         data-index="${i}" 
+    poemString += `<span class="word ${classesStr} hidden-word"
+                         data-index="${i}"
                          ${styleStr}
                          onmouseover="hoveredWord(this)">${word+' '}</span>`
     if (Math.random() > 0.725) {
@@ -91,16 +91,14 @@ function renderWords(words, url) {
     }
   }
 
-  let loaderElm = document.getElementById('loader')
-  loaderElm.classList.add('hidden')
+  hideElement('loader')
   let poemElm = document.getElementById('poem')
   poemElm.innerHTML = poemString
 
   if (url) {
     let linkElm = document.getElementById('link')
     linkElm.href = url
-    let footerElm = document.getElementById('footer')
-    footerElm.classList.remove('hidden')
+    showElement('footer')
   }
 
   setTimeout(function () {
@@ -129,7 +127,7 @@ function createRandomStyle() {
     }
     `
   }
-  
+
   sheet.innerHTML = cssString;
   document.body.appendChild(sheet);
 }
@@ -160,7 +158,7 @@ function recursiveAnimateNumbers() {
   }, 150);
 }
 
-// ----------- User Interactions ----------- 
+// ----------- User Interactions -----------
 
 async function hoveredWord(wordElm) {
   if (wordElm.classList.contains('hovered')) return
@@ -169,14 +167,18 @@ async function hoveredWord(wordElm) {
   if (newWords.length === words.length) {
     words = newWords
     newWords = []
-    if (Math.random()>0.5) {
+    if (Math.random()>0.725) {
+      setTimeout(function () {
+        hideElement('poem')
+        showElement('loader')
+      }, 1000)
       let result = await getMivzakim()
+      hideElement('loader')
+      showElement('poem')
       if (result.url != currMivzakURL) {
         run(result)
       } else {
-        setTimeout(function () {
-          renderWords(words)
-        }, 1000);
+        renderWords(words)
       }
     } else {
       setTimeout(function () {
@@ -196,8 +198,7 @@ function toggleSettingsMenu(e) {
   let menuElm = document.querySelector(".settings-menu")
   let menuIsHidden = menuElm.classList.toggle("hidden")
   document.body.onclick = ()=>{
-    let menuElm = document.querySelector(".settings-menu")
-    menuElm.classList.add("hidden")
+    hideElement(".settings-menu")
     document.body.onclick = null;
   }
 }
@@ -205,7 +206,7 @@ function toggleSettingsMenu(e) {
 function changedRandomStyle(e) {
   let randomStyleCheckbox = document.querySelector(".settings-menu input")
   let isChecked = randomStyleCheckbox.checked
-  let poemElm = document.querySelector('#poem')
+  let poemElm = document.querySelector('poem')
   poemElm.classList.toggle('with-random-style', isChecked)
   if (e) e.stopPropagation()
 }
@@ -215,7 +216,17 @@ function checkIfRandomStyleIsOn() {
   if (randomStyleCheckbox.checked) changedRandomStyle()
 }
 
-// ----------- Utilities ----------- 
+// ----------- Utilities -----------
+
+function hideElement(selector) {
+  let elm = document.getElementById(selector)
+  elm.classList.add('hidden')
+}
+
+function showElement(selector) {
+  let elm = document.getElementById(selector)
+  elm.classList.remove('hidden')
+}
 
 function shuffleArray(array) {
   for (var i = array.length - 1; i > 0; i--) {

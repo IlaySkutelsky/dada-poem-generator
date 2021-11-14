@@ -1,27 +1,42 @@
 
-const axios = require('axios')
-const cheerio = require('cheerio')
+const puppeteer = require('puppeteer');
 
+const ynetURL = "https://www.ynet.co.il/home"
 const mivzakimURL = "https://www.ynet.co.il/news/category/184"
-const firstMivzakSelector = ".slotContentDiv .slotsContent .slotList .slotView:nth-child(1) a"
-const mivzakHeaderSelector = "h1.mainTitle"
-const mivzakBodySelector = ".textEditor_container span[data-text=true]"
+const firstMivzakArrowSelector = ".article-flashes-page .Accordion .AccordionSection .arrow"
+const firstMivzakBodySelector = ".article-flashes-page .Accordion .AccordionSection .itemBody"
 
 async function scrapMivzak() {
-  let mivzakimResponse = await axios.get(mivzakimURL)
-  let $ = cheerio.load(mivzakimResponse.data)
-  let firstMivzak = $(firstMivzakSelector)
-  let firstMivzakURL = $(firstMivzak[0]).attr('href')
-  let firstMivzakresponse = await axios.get(firstMivzakURL)
-  $ = cheerio.load(firstMivzakresponse.data)
-  let mivzakHeaderText = $(mivzakHeaderSelector).contents().first().text();
-  let mivzakBodyText = $(mivzakBodySelector).contents().first().text();
-  let mivzakString = mivzakHeaderText + ' ' + mivzakBodyText
-  return {
-    text: mivzakString,
-    url: firstMivzakURL
+  try {
+    console.log(1);
+    const browser = await puppeteer.launch({args: ['--no-sandbox']})
+    const page = await browser.newPage()
+    await page.goto(mivzakimURL, {timeout: 0})
+    let firstMivzakArrow = await page.waitForSelector(firstMivzakArrowSelector)
+    await firstMivzakArrow.evaluate(node => node.click())
+    let firstMivzakBody = await page.waitForSelector(firstMivzakBodySelector)
+    let mivzakObject = await firstMivzakBody.evaluate(function(node) {
+      return {
+        id: node.parentElement.id,
+        text: node.innerText
+      }
+    })
+    mivzakObject.text = mivzakObject.text.substr(0, mivzakObject.text.lastIndexOf("("));
+    browser.close();
+    return {
+      text: mivzakObject.text,
+      url: mivzakimURL+'#'+mivzakObject.id
+    }
+  }
+  catch(e) {
+    console.log('scrapMivzak error');
+    console.log(e);
   }
 };
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 ynetFetcher = function() {
   this.fetchMivzak = async function(cb) {
