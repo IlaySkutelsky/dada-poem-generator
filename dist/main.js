@@ -166,24 +166,9 @@ async function hoveredWord(wordElm) {
   if (newWords.length === words.length) {
     words = newWords
     newWords = []
-    if (Math.random()>0.725) {
-      setTimeout(function () {
-        hideElement('poem')
-        showElement('loader')
-      }, 1000)
-      let result = await getMivzakim()
-      hideElement('loader')
-      showElement('poem')
-      if (result.url != currMivzakURL) {
-        run(result)
-      } else {
-        renderWords(words)
-      }
-    } else {
-      setTimeout(function () {
-        renderWords(words)
-      }, 1000);
-    }
+    setTimeout(function () {
+      renderWords(words)
+    }, 1000);
   } else {
     setTimeout(function () {
       randomizeWordAttribute()
