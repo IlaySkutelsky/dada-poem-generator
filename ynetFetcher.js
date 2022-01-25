@@ -8,7 +8,6 @@ const firstMivzakBodySelector = ".article-flashes-page .Accordion .AccordionSect
 
 async function scrapMivzak() {
   try {
-    console.log(1);
     const browser = await puppeteer.launch({args: ['--no-sandbox']})
     const page = await browser.newPage()
     await page.goto(mivzakimURL, {timeout: 0})
