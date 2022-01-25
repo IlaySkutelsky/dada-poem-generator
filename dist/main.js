@@ -2,6 +2,14 @@ let words
 let newWords = []
 let currMivzakURL
 let bodyLoaded = false
+let isForDisplay
+
+function checkIfForDisplay() {
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  isForDisplay = urlParams.has('for-display');
+}
+checkIfForDisplay()
 
 async function run(result) {
   if (!result) result = await getMivzakim()
@@ -14,6 +22,7 @@ async function run(result) {
   checkIfRandomStyleIsOn()
   renderWords(words, result.url)
   createRandomStyle()
+  pickTitle()
   recursiveAnimateNumbers()
   recursiveCheckForNewMivzak()
 }
@@ -116,12 +125,79 @@ function renderWords(words, url) {
   if (url) {
     let linkElm = document.getElementById('link')
     linkElm.href = url
-    showElement('footer')
+    if (!isForDisplay) showElement('footer')
   }
 
   setTimeout(function () {
     appearifyWords()
   }, 100);
+}
+
+function pickTitle() {
+  console.log(1);
+  let poem = document.querySelector('#poem').innerText
+  let lines = poem.split('\n').map(line => line.trim())
+  console.log(lines);
+  let title = ''
+  findTitleBlock: {
+    if (lines[0].split(' ').length == 4) title = lines[0]
+    else if (lines[0].split(' ').length == 3) title = lines[0]
+    else {
+      console.log(2);
+      if (lines[lines.length-1].split(' ').length == 4) title = lines[lines.length-1]
+      else {
+        console.log(3);
+        for (let i= 0; i< lines.length; i++) {
+          let line = lines[i];
+          let chunks = line.split(/[,\.]/g)
+          for (let i = 0; i < chunks.length; i++) {
+            let chunk = chunks[i];
+            if (chunk.split(' ').length == 3) {
+              title = chunk
+              break findTitleBlock
+            }
+          }
+        }
+        console.log(4);
+        for (let i= 0; i< lines.length; i++) {
+          let line = lines[i];
+          let chunks = line.split(/[,\.]/g)
+          for (let i = 0; i < chunks.length; i++) {
+            let chunk = chunks[i];
+            if (chunk.split(' ').length == 4) {
+              title = chunk
+              break findTitleBlock
+            }
+          }
+        }
+        console.log(5);
+        for (let i= 0; i< lines.length; i++) {
+          let line = lines[i];
+          let chunks = line.split(/[,\.]/g)
+          for (let i = 0; i < chunks.length; i++) {
+            let chunk = chunks[i];
+            if (chunk.split(' ').length == 2) {
+              title = chunk
+              break findTitleBlock
+            }
+          }
+        }
+        console.log(6);
+        for (let i= 0; i< lines.length-1; i++) {
+          let joinedLine = lines[i]+lines[i+1];
+          if (joinedLine.split(' ').length == 4) {
+            title = joinedLine
+            break findTitleBlock
+          }
+        }
+        console.log(7);
+        title = lines[0]
+      }
+    }
+  }
+  console.log(8);
+  document.querySelector('h1').innerText = title
+  console.log(title)
 }
 
 function createRandomStyle() {
