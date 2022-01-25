@@ -15,6 +15,25 @@ async function run(result) {
   renderWords(words, result.url)
   createRandomStyle()
   recursiveAnimateNumbers()
+  recursiveCheckForNewMivzak()
+}
+
+async function recursiveCheckForNewMivzak() {
+  console.log("checking for new mivzak")
+  result = await getMivzakim()
+  if (currMivzakURL !== result.url) {
+    console.log("new mivzak found")
+    let poemElm = document.getElementById('poem')
+    poemElm.innerHTML = ''
+    hideElement('footer')
+    showElement('loader')
+    let randomWaitTime = Math.random()*2000+2000
+    await sleep(randomWaitTime)
+    run(result)
+  } else {
+    console.log("old mivzak found")
+    setTimeout(recursiveCheckForNewMivzak, 30*1000);
+  }
 }
 
 function handleBodyLoaded() {bodyLoaded=true}
@@ -225,5 +244,8 @@ function twoDigits(num) {
   return Math.round(num * 100) / 100
 }
 
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 run()
