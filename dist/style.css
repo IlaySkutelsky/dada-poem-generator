@@ -20,6 +20,12 @@ body {
   background-color: #EEE;
 }
 
+body.for-display {
+  margin-top: 5vh;
+  font-size: 1.8em;
+  cursor: none;
+}
+
 @media screen and (max-width: 500px) {
   body {
     font-size: 1em;

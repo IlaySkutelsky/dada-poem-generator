@@ -45,7 +45,10 @@ async function recursiveCheckForNewMivzak() {
   }
 }
 
-function handleBodyLoaded() {bodyLoaded=true}
+function handleBodyLoaded() {
+  bodyLoaded=true
+  if (isForDisplay) document.body.classList.add("for-display")
+}
 
 function waitForBodyToLoad() {
   return new Promise((resolve, reject)=>{
