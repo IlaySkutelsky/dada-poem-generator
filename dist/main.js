@@ -109,8 +109,8 @@ function renderWords(words, url) {
     if (word.search(/\d/) !== -1) {
       let amountOfDigits = word.match(/\d/g).length
       classesStr = 'number'
-      let minWidth = Math.pow(word.length-amountOfDigits, 0.5) + Math.pow(amountOfDigits, 0.75) + word.length*0.1
-      styleStr = `style="min-width: ${twoDigits(minWidth)}em"`
+      // let minWidth = Math.pow(word.length-amountOfDigits, 0.5) + Math.pow(amountOfDigits, 0.75) + word.length*0.1
+      // styleStr = `style="min-width: ${twoDigits(minWidth)}em"`
     }
     poemString += `<span class="word ${classesStr} hidden-word"
                          data-index="${i}"
