@@ -288,7 +288,7 @@ function toggleSettingsMenu(e) {
 function changedRandomStyle(e) {
   let randomStyleCheckbox = document.querySelector(".settings-menu input")
   let isChecked = randomStyleCheckbox.checked
-  let poemElm = document.querySelector('poem')
+  let poemElm = document.querySelector('#poem')
   poemElm.classList.toggle('with-random-style', isChecked)
   if (e) e.stopPropagation()
 }
