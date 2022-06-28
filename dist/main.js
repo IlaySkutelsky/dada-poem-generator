@@ -258,7 +258,7 @@ function recursiveAnimateNumbers() {
 // ----------- User Interactions -----------
 
 async function hoveredWord(wordElm) {
-  if (wordElm.classList.contains('hovered')) return
+  if (isForDisplay || wordElm.classList.contains('hovered')) return
   wordElm.classList.add('hovered');
   newWords.push(words[wordElm.dataset.index])
   if (newWords.length === words.length) {
