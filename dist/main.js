@@ -23,7 +23,7 @@ async function run(result) {
   renderWords(words, result.url)
   createRandomStyle()
   pickTitle()
-  recursiveAnimateNumbers()
+  // recursiveAnimateNumbers()
   recursiveCheckForNewMivzak()
 }
 
