@@ -6,9 +6,21 @@ const mivzakimURL = "https://www.ynet.co.il/news/category/184"
 const firstMivzakArrowSelector = ".article-flashes-page .Accordion .AccordionSection .arrow"
 const firstMivzakBodySelector = ".article-flashes-page .Accordion .AccordionSection .itemBody"
 
+let browser
+let closeBrowserTimeoutID
+
 async function scrapMivzak() {
   try {
-    const browser = await puppeteer.launch({args: ['--no-sandbox']})
+    // let now = new Date(Date.now())
+    // let time = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds()
+    if (!browser) {
+      // console.log("launching new browser");
+      browser = await puppeteer.launch({headless: true ,args: ['--no-sandbox']})
+    } else {
+      // console.log("using existing browser");
+      // console.log("clearing timer " + time);
+      clearTimeout(closeBrowserTimeoutID)
+    }
     const page = await browser.newPage()
     await page.goto(mivzakimURL, {timeout: 0})
     let firstMivzakArrow = await page.waitForSelector(firstMivzakArrowSelector)
@@ -21,7 +33,9 @@ async function scrapMivzak() {
       }
     })
     mivzakObject.text = mivzakObject.text.substr(0, mivzakObject.text.lastIndexOf("("));
-    browser.close();
+    // console.log("setting timer " + time);
+    closeBrowserTimeoutID = setTimeout(closeBrowser, 3*60*1000, time)
+    page.close()
     return {
       text: mivzakObject.text,
       url: mivzakimURL+'#'+mivzakObject.id
@@ -32,6 +46,13 @@ async function scrapMivzak() {
     console.log(e);
   }
 };
+
+function closeBrowser(print) {
+    // console.log("closing browser");
+    // console.log(print);
+    browser.close();
+    browser = null;
+}
 
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
