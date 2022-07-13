@@ -41,7 +41,7 @@ async function recursiveCheckForNewMivzak() {
     run(result)
   } else {
     console.log("old mivzak found")
-    setTimeout(recursiveCheckForNewMivzak, 30*1000);
+    setTimeout(recursiveCheckForNewMivzak, 60*1000);
   }
 }
 
