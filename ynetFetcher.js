@@ -34,7 +34,7 @@ async function scrapMivzak() {
     })
     mivzakObject.text = mivzakObject.text.substr(0, mivzakObject.text.lastIndexOf("("));
     // console.log("setting timer " + time);
-    closeBrowserTimeoutID = setTimeout(closeBrowser, 3*60*1000, time)
+    closeBrowserTimeoutID = setTimeout(closeBrowser, 3*60*1000)
     page.close()
     return {
       text: mivzakObject.text,
