@@ -10,6 +10,7 @@ let browser
 let closeBrowserTimeoutID
 
 async function scrapMivzak() {
+  console.log("starting the scrape function");
   try {
     // let now = new Date(Date.now())
     // let time = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds()
@@ -21,10 +22,12 @@ async function scrapMivzak() {
       // console.log("clearing timer " + time);
       clearTimeout(closeBrowserTimeoutID)
     }
+    console.log("going to page");
     const page = await browser.newPage()
     await page.goto(mivzakimURL, {timeout: 0})
     let firstMivzakArrow = await page.waitForSelector(firstMivzakArrowSelector)
     await firstMivzakArrow.evaluate(node => node.click())
+    console.log("clicking on 1st mivzak");
     let firstMivzakBody = await page.waitForSelector(firstMivzakBodySelector)
     let mivzakObject = await firstMivzakBody.evaluate(function(node) {
       return {
