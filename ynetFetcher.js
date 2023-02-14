@@ -16,7 +16,7 @@ async function scrapMivzak() {
     // let time = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds()
     if (!browser) {
       // console.log("launching new browser");
-      browser = await puppeteer.launch({headless: true ,args: ['--no-sandbox']})
+      browser = await puppeteer.launch({headless: true ,args: ['--no-sandbox'], pipe: true})
     } else {
       // console.log("using existing browser");
       // console.log("clearing timer " + time);
