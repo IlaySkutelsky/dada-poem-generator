@@ -24,7 +24,7 @@ async function run(result) {
   createRandomStyle()
   pickTitle()
   // recursiveAnimateNumbers()
-  recursiveCheckForNewMivzak()
+  // recursiveCheckForNewMivzak()
 }
 
 async function recursiveCheckForNewMivzak() {
@@ -41,7 +41,7 @@ async function recursiveCheckForNewMivzak() {
     run(result)
   } else {
     console.log("old mivzak found")
-    // setTimeout(recursiveCheckForNewMivzak, 60*1000);
+    setTimeout(recursiveCheckForNewMivzak, 60*1000);
   }
 }
 
