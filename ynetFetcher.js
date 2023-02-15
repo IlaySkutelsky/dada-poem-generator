@@ -16,18 +16,42 @@ async function scrapMivzak() {
     // let time = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds()
     if (!browser) {
       // console.log("launching new browser");
-      browser = await puppeteer.launch({headless: true ,args: ['--no-sandbox'], dumpio: true})
+      browser = await puppeteer.launch({
+	headless: true ,
+	args: [
+		'--ignore-certificate-errors',
+		'--no-sandbox',
+		'--disable-setuid-sandbox',
+		'--disable-accelerated-2d-canvas',
+		'--disable-gpu'
+	], 
+	dumpio: true
+      })
     } else {
       // console.log("using existing browser");
       // console.log("clearing timer " + time);
       clearTimeout(closeBrowserTimeoutID)
     }
-    console.log("going to page");
-    const page = await browser.newPage()
-    await page.goto(mivzakimURL, {timeout: 0})
+    console.log("creating incognito context");
+    const context = await browser.createIncognitoBrowserContext();
+    console.log("opening new page");
+    const page = await context.newPage()
+    console.log("setting up request interception");
+    await page.setRequestInterception(true); // Optimize (no stylesheets, images)...
+      page.on('request', request => {
+        if (['image', 'stylesheet'].includes(request.resourceType())) {
+          request.abort();
+        } else {
+          request.continue();
+        }
+      });
+    console.log("going to ynet url");
+    await page.goto(mivzakimURL, {waitUntil: 'domcontentloaded', timeout: 0})
+    console.log("waiting for first mivzak arrow element");
     let firstMivzakArrow = await page.waitForSelector(firstMivzakArrowSelector)
+    console.log("clicking on first mivzak arrow element");
     await firstMivzakArrow.evaluate(node => node.click())
-    console.log("clicking on 1st mivzak");
+    console.log("waiting for mivzak body");
     let firstMivzakBody = await page.waitForSelector(firstMivzakBodySelector)
     let mivzakObject = await firstMivzakBody.evaluate(function(node) {
       return {
