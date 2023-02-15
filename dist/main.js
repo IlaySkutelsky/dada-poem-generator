@@ -24,7 +24,7 @@ async function run(result) {
   createRandomStyle()
   pickTitle()
   // recursiveAnimateNumbers()
-  // recursiveCheckForNewMivzak()
+  recursiveCheckForNewMivzak()
 }
 
 async function recursiveCheckForNewMivzak() {
