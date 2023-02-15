@@ -137,19 +137,15 @@ function renderWords(words, url) {
 }
 
 function pickTitle() {
-  console.log(1);
   let poem = document.querySelector('#poem').innerText
   let lines = poem.split('\n').map(line => line.trim())
-  console.log(lines);
   let title = ''
   findTitleBlock: {
     if (lines[0].split(' ').length == 4) title = lines[0]
     else if (lines[0].split(' ').length == 3) title = lines[0]
     else {
-      console.log(2);
       if (lines[lines.length-1].split(' ').length == 4) title = lines[lines.length-1]
       else {
-        console.log(3);
         for (let i= 0; i< lines.length; i++) {
           let line = lines[i];
           let chunks = line.split(/[,\.]/g)
@@ -161,7 +157,6 @@ function pickTitle() {
             }
           }
         }
-        console.log(4);
         for (let i= 0; i< lines.length; i++) {
           let line = lines[i];
           let chunks = line.split(/[,\.]/g)
@@ -173,7 +168,6 @@ function pickTitle() {
             }
           }
         }
-        console.log(5);
         for (let i= 0; i< lines.length; i++) {
           let line = lines[i];
           let chunks = line.split(/[,\.]/g)
@@ -185,7 +179,6 @@ function pickTitle() {
             }
           }
         }
-        console.log(6);
         for (let i= 0; i< lines.length-1; i++) {
           let joinedLine = lines[i]+lines[i+1];
           if (joinedLine.split(' ').length == 4) {
@@ -193,14 +186,11 @@ function pickTitle() {
             break findTitleBlock
           }
         }
-        console.log(7);
         title = lines[0]
       }
     }
   }
-  console.log(8);
   document.querySelector('h1').innerText = title
-  console.log(title)
 }
 
 function createRandomStyle() {
