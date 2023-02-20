@@ -1,4 +1,5 @@
 const xml2js = require('xml2js');
+const fetch = require('node-fetch');
 
 async function scrapMivzak() {
     const parser = new xml2js.Parser();
