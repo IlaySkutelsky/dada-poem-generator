@@ -12,6 +12,6 @@ app.get('/mivzak', function(req, res) {
   });
 });
 
-app.use(express.static('dist'))
+// app.use(express.static('dist'))
 
 app.listen(port, () => console.log(`Dada-poem-generator server listening on port ${port}!`))
